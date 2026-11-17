@@ -1,4 +1,48 @@
-# Welcome
+# Vision-Language Model from scratch
+
+A small Vision-Language Model (VLM) that takes an image and a text prompt and generates an answer, built in PyTorch as the group project of the **Advanced AI** course (ModIA, Toulouse INP, 2026). The code for the project lives in Project/; the other `PP*` folders are the course's practical sessions (GPT-2, ViT, CLIP, tokenizer, pretraining, self-supervised learning, deployment).
+
+## Architecture
+
+The model follows the design of small open-source VLMs such as SmolVLM:
+
+- **Vision encoder**: a Vision Transformer loaded with SigLIP2 weights (`google/siglip2-base-patch16-512`), turning a 512×512 image into 1024 patch tokens.
+- **Modality projector**: maps image tokens into the language model's embedding space. On top of the baseline projector, we implemented a **C-Abstractor** (inspired by [Honeybee](https://arxiv.org/abs/2312.06742)): convolutional ResBlocks, adaptive average pooling down to 64 tokens, then more ResBlocks, with zero-initialised residuals for stable end-to-end training.
+- **Language model**: a decoder-only transformer loaded with SmolLM2-360M-Instruct weights, which generates the answer.
+
+The ViT, language model, projector and training loop were implemented from a skeleton codebase and validated with a unit-test suite.
+
+## Training and evaluation
+
+Training ran on the **Turpan** GPU cluster with SLURM (scripts in `Project/scripts/`), including checkpointing and resumption across job time limits. Models were evaluated on the **MMStar** benchmark (1,500 multiple-choice questions across six categories); our best checkpoint reached **26.1% accuracy** (not better then random due to a small error in code). Detailed results are in `Project/eval_results/`.
+
+Despite unsatisfactory results, this project allowed us to better understand the VLM architecture and practice with SLURM on GPU clusters.
+
+## Deployment
+
+The model is served by a **FastAPI** backend and a **Gradio** chat interface, each in its own Docker container:
+
+```bash
+cd Project
+docker compose up --build
+```
+
+The API runs on `localhost:8000` (`/health`, `/chat`) and the chat UI on `localhost:7860`, where you can upload an image and ask questions about it.
+
+## Team
+
+- [Maël Montillet](https://github.com/MaelMontillet)
+- [Driss Chraibi](https://github.com/dchrn7)
+- [Emeline Castello](https://github.com/emelinecastello)
+
+
+## About this repository
+
+This is a standalone copy of our team's working repository, [dchrn7/Modern_LLM](https://github.com/dchrn7/Modern_LLM), itself a fork of the course repository. It was copied with full git history (`git clone --bare` + `git push --all`), so every commit keeps its original author.
+
+# Original ReadME
+
+This is the original ReadMe from the original repository of the course.
 
 Welcome to the **Advanced AI** ModIA course page!
 
