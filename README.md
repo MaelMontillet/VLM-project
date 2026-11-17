@@ -14,7 +14,10 @@ The ViT, language model, projector and training loop were implemented from a ske
 
 ## Training and evaluation
 
-Training ran on the **Turpan** GPU cluster with SLURM (scripts in `Project/scripts/`), including checkpointing and resumption across job time limits. Models were evaluated on the **MMStar** benchmark (1,500 multiple-choice questions across six categories); our best checkpoint reached **26.1% accuracy** (not better then random due to a small error in code). Detailed results are in `Project/eval_results/`.
+Training ran on the **Turpan** GPU cluster with SLURM (scripts in `Project/scripts/`), including checkpointing and resumption across job time limits. Models were evaluated on the **MMStar** benchmark (1,500 multiple-choice questions across six categories); our best checkpoint reached **26.1% accuracy**. 
+Our accuracy was not better then random due to a small error in code. By mistake, we applied the output projection twice in the attention of the ViT (lines 158 and 159 of Project/models/vision_transformer.py). 
+
+Detailed results are in `Project/eval_results/`.
 
 Despite unsatisfactory results, this project allowed us to better understand the VLM architecture and practice with SLURM on GPU clusters.
 
